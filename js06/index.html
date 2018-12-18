@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="诗句 诗名 诗人">
+    <ul class="suggestions">
+      <li>输入诗句，找一首诗</li>
+    </ul>
+  </form>
+<script>
+    const endpoint = 'https://gist.githubusercontent.com/soyaine/81399bb2b24ca1bb5313e1985533c640/raw/bdf7df2cbcf70706c4a5e51a7dfb8c933ed78878/TangPoetry.json';
+    const poetrys = []
+    // 异步获取数据并解析（fetch接受资源文件并返回一个Promise对象）
+    fetch(endpoint)
+        .then(blob => blob.json())
+        .then(data => poetrys.push(...data))
+    console.log(poetrys)
+
+    function findMatches(wordToMatch, poetrys) {
+        return poetrys.filter(poet => {
+            const regex = new RegExp(wordToMatch, 'gi')  // 全文查找，忽略大小写
+            const author = poet.detail_author.join('')  // detail_author 是数组,不能直接使用match,转换成字符串
+            return poet.detail_text.match(regex) || poet.title.match(regex) || author.match(regex)
+        })
+    }
+
+    function displayMatches() {
+        const matches = findMatches(this.value, poetrys)
+        const regex = new RegExp(this.value, 'gi')  // 高亮查询的字
+        const html = matches.map( poet => {
+            const text = poet.detail_text.replace(regex, `<span style="background: red;">${ this.value }</span>`)
+            const title = poet.title.replace(regex, `<span style="background: red;">${ this.value }</span>`)
+            const author = poet.detail_author[0].replace(regex, `<span style="background: red;">${ this.value }</span>`)
+            return `
+                <li>
+                    <span class="poet">${ text }</span>  
+                    <span class="title">${ title } - ${author}</span>  
+                </li>
+            `
+        }).join('') // 转换成字符串
+        suggestions.innerHTML = html;
+    }
+
+    const search = document.querySelector('.search');
+	const suggestions = document.querySelector('.suggestions');
+	
+	search.addEventListener('change', displayMatches);
+	search.addEventListener('keyup', displayMatches);
+</script>
+  </body>
+</html>

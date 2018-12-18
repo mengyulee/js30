@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Array Cardio 💪💪</title>
+</head>
+<body>
+  <p><em>Psst: have a look at the JavaScript Console</em> 💁</p>
+  <script>
+    // ## Array Cardio Day 2
+
+    const people = [
+      { name: 'Wes', year: 1988 },
+      { name: 'Kait', year: 1986 },
+      { name: 'Irv', year: 1970 },
+      { name: 'Lux', year: 2015 }
+    ];
+
+    const comments = [
+      { text: 'Love this!', id: 523423 },
+      { text: 'Super good', id: 823423 },
+      { text: 'You are the best', id: 2039842 },
+      { text: 'Ramen is my fav food ever', id: 123523 },
+      { text: 'Nice Nice Nice!', id: 542328 }
+    ];
+
+    // Some and Every Checks
+    // Array.prototype.some() // is at least one person 19?
+    // Array.prototype.every() // is everyone 19?
+    const isAdult = people.some( person => {    //数组中有一个满足条件就返回true
+		const currentYear = (new Date()).getFullYear();
+		return currentYear - person.year >= 19;
+	});
+    console.log({isAdult});
+    
+    const isAllAdult = people.every( person => {    //数组中全部满足条件就返回true
+        const currentYear = (new Date()).getFullYear()
+        return currentYear - person.year >= 19
+    })
+    console.log({isAllAdult})
+
+    // Array.prototype.find()
+    // Find is like filter, but instead returns just the one you are looking for
+    // find the comment with the ID of 823423
+    const comment = comments.find( comment => comment.id === 823423 )    //find 与 filter 的区别：find发现就返回，只返回一个；filter返回全部符合的结果
+    console.log(comment)
+
+
+    // Array.prototype.findIndex()
+    // Find the comment with this ID
+    // delete the comment with the ID of 823423
+    const index = comments.findIndex( comment => comment.id === 823423)
+    console.log(index)
+    // 方法一：
+    // comments.splice(index, 1)   // splice 直接修改原数组
+    // console.log(comments)
+    // 方法二：
+    const newComments = [...comments.slice(0, index), ...comments.slice(index + 1)]  // slice 复制原数组做修改，只能通过拼接漏掉目标元素。 ... es6语法，数组间的拼接，组成一个数组
+    console.log(newComments)
+
+
+
+
+  </script>
+</body>
+</html>
